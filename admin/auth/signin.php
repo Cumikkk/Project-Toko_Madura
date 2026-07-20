@@ -52,7 +52,7 @@
             let button = $(this).find('button[type="submit"]');
             let data = Object.fromEntries(new FormData(this).entries());
             button.addClass('loading');
-            $.post("/ajax/auth/signin", data, function(resp) {
+            $.post("ajax/auth/signin", data, function(resp) {
                 button.removeClass('loading');
                 if(!resp.success) {
                     Swal.fire(resp.alert);

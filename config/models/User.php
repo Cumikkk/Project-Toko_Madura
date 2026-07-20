@@ -39,13 +39,25 @@ class User extends UserAuth {
             }
     
             $db = Database::connect();
-            $sqlGet = $db->query("SELECT * FROM tb_member WHERE MBR_ID = {$userid} LIMIT 1");
+            $sqlGet = $db->query("SELECT * FROM users WHERE id = {$userid} LIMIT 1");
             if($sqlGet->num_rows != 1) {
                 return false;
             }
 
-            $user = $sqlGet->fetch_assoc();
-            $user['userid'] = md5(md5($userid));
+            $rawUser = $sqlGet->fetch_assoc();
+            
+            $user = [
+                'MBR_ID' => $rawUser['id'],
+                'ID_MBR' => $rawUser['id'],
+                'MBR_NAME' => $rawUser['nama'],
+                'MBR_EMAIL' => $rawUser['email'],
+                'MBR_USER' => $rawUser['username'],
+                'MBR_STS' => $rawUser['status'] == 'aktif' ? -1 : 1, 
+                'MBR_LOCKED' => $rawUser['status'] == 'aktif' ? 0 : 1,
+                'MBR_THEME' => '1',
+                'role' => $rawUser['role'],
+                'userid' => md5(md5($rawUser['id']))
+            ];
             
             if($user['MBR_LOCKED']) {
                 return false;

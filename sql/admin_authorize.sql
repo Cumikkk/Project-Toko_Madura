@@ -22,14 +22,14 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 DROP TABLE IF EXISTS `admin_authorize`;
 CREATE TABLE `admin_authorize`  (
-  `admin_id` int NOT NULL,
+  `admin_id` int(10) unsigned NOT NULL,
   `permission_id` int NOT NULL,
   `status` int NOT NULL DEFAULT 0,
   `created_at` datetime NULL DEFAULT current_timestamp(),
   `updated_at` timestamp NULL DEFAULT NULL,
   UNIQUE INDEX `uniq_role`(`admin_id` ASC, `permission_id` ASC) USING BTREE,
   INDEX `fk_permission_id`(`permission_id` ASC) USING BTREE,
-  CONSTRAINT `admin_authorize_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `tb_admin` (`ID_ADM`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `admin_authorize_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `admin_authorize_ibfk_3` FOREIGN KEY (`permission_id`) REFERENCES `admin_permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 

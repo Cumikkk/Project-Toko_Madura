@@ -8,7 +8,9 @@ use Config\Core\Database;
 
 try {
     $db = Database::connect();
-    $parseUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $rawParseUrl = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+    $ajaxPos = strpos($rawParseUrl, '/ajax');
+    $parseUrl = ($ajaxPos !== false) ? substr($rawParseUrl, $ajaxPos) : $rawParseUrl;
     $requestUri = str_replace(['\*', '/ajax', '/post'], ['', '', '/postdata'], $parseUrl);
     $fileUrl = __DIR__ . $requestUri . ".php";
 
