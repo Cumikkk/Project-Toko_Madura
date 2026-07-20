@@ -8,7 +8,7 @@ class CompanyProfile {
     public static $name;
 
     public static function init() {
-        self::$name = $_ENV['APP_NAME'];
+        self::$name = $_ENV['APP_NAME'] ?? 'Toko Madura';
     }
 
     public static function profilePerusahaan(int $defaultId = 1) {

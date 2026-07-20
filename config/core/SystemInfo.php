@@ -32,7 +32,26 @@ class SystemInfo {
     public static function app(?string $input) {
         global $_ENV;
         $input ??= "";
-        if(!array_key_exists($input, $_ENV)) {
+        
+        if (empty($_ENV[$input])) {
+            if ($input === 'CLIENT_URL' || $input === 'ADMIN_URL') {
+                $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || ($_SERVER['SERVER_PORT'] ?? 80) == 443) ? "https://" : "http://";
+                $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+                $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
+                $currentFolder = ($input === 'CLIENT_URL') ? 'client' : 'admin';
+                
+                if (strpos($scriptName, "/$currentFolder") !== false) {
+                    $basePath = substr($scriptName, 0, strpos($scriptName, "/$currentFolder") + strlen("/$currentFolder"));
+                    return rtrim($protocol . $host . $basePath, '/');
+                } else {
+                    $parts = explode('/', trim($scriptName, '/'));
+                    $projectPath = '';
+                    if (count($parts) > 1 && $parts[0] !== $currentFolder) {
+                        $projectPath = '/' . $parts[0];
+                    }
+                    return $protocol . $host . $projectPath . '/' . $currentFolder;
+                }
+            }
             return "";
         }
 
