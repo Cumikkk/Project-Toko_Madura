@@ -42,13 +42,13 @@ class AdminAuth {
     public static function authentication() {
         try {
             global $db, $_SESSION, $_COOKIE;
-            if(empty($db)) {
-                $db = Database::connect();
-            }
-            
             $authData = self::getSessionData();
             if(!$authData) {
                 return false;
+            }
+
+            if(empty($db)) {
+                $db = Database::connect();
             }
 
             /** Check Database */

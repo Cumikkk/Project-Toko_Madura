@@ -3,7 +3,6 @@ require_once __DIR__ . "/../config/setting.php";
 
 use App\Models\CompanyProfile;
 use App\Models\Helper;
-use App\Models\Database;
 use Config\Core\SystemInfo;
 
 $queryParam = Helper::getSafeInput($_GET);
@@ -88,7 +87,7 @@ if(empty($authPage)) {
 			
             if ('serviceWorker' in navigator) {
                 window.addEventListener('load', function() {
-                navigator.serviceWorker.register('/service-worker.js')
+                navigator.serviceWorker.register('service-worker.js')
                     .then(function(registration) {
                     console.log('Service Worker registered with scope:', registration.scope);
                     }, function(err) {

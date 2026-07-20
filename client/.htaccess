@@ -18,19 +18,19 @@ Options +SymLinksifOwnerMatch
 	RewriteCond %{REQUEST_FILENAME} -l
 	RewriteRule ^ - [L]
 
-	RewriteRule ^export/([^./]+)/?$ /documents/export.php?filename=$1 [L,QSA]
+	RewriteRule ^export/([^./]+)/?$ documents/export.php?filename=$1 [L,QSA]
 	
 	# Auth Page
 	RewriteRule ^(index|signin)/?$ index.php?a=signin [L,QSA]
-	RewriteRule ^signup/?$ /index.php?a=signup [L,QSA]
-	RewriteRule ^forgot/?$ /index.php?a=forgot [L,QSA]
-	RewriteRule ^verification/([^./]+)?$ /index.php?a=verification&b=$1 [L,QSA]
-	RewriteRule ^reset/([^./]+)?$ /index.php?a=reset&b=$1 [L,QSA]
-	RewriteRule ^otp/([^./]+)?$ /index.php?a=otp&b=$1 [L,QSA]
-	RewriteRule ^referral/([^./]+)?$ /index.php?a=refferal&b=$1 [L,QSA]
-	RewriteRule ^register?$ /index.php?a=register [L,QSA]
-	RewriteRule ^delete-account/?$ /index.php?a=delete-account [L,QSA]
-	RewriteRule ^reset-passcode/([^./]+)?$ /index.php?a=reset-passcode&b=$1 [L,QSA]
+	RewriteRule ^signup/?$ index.php?a=signup [L,QSA]
+	RewriteRule ^forgot/?$ index.php?a=forgot [L,QSA]
+	RewriteRule ^verification/([^./]+)?$ index.php?a=verification&b=$1 [L,QSA]
+	RewriteRule ^reset/([^./]+)?$ index.php?a=reset&b=$1 [L,QSA]
+	RewriteRule ^otp/([^./]+)?$ index.php?a=otp&b=$1 [L,QSA]
+	RewriteRule ^referral/([^./]+)?$ index.php?a=refferal&b=$1 [L,QSA]
+	RewriteRule ^register?$ index.php?a=register [L,QSA]
+	RewriteRule ^delete-account/?$ index.php?a=delete-account [L,QSA]
+	RewriteRule ^reset-passcode/([^./]+)?$ index.php?a=reset-passcode&b=$1 [L,QSA]
 
 	# Dashboard Page
 	RewriteRule ^([^./]+)/([^./]+)/([^./]+)/([^./]+)/([^./]+)/?$ home.php?a=$1&b=$2&c=$3&d=$4&e=$5 [L,QSA]

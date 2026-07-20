@@ -15,13 +15,17 @@ SystemInfo::refreshSession();
 
 date_default_timezone_set("Asia/Jakarta");
 error_reporting(E_ALL );
-ini_set("display_errors", ($_ENV['APP_MODE'] == "production"? 0 : 1));
+ini_set("display_errors", (($_ENV['APP_MODE'] ?? 'development') == "production"? 0 : 1));
 define("CONFIG_ROOT", __DIR__);
 define("WEB_ROOT", str_replace("config", "client", __DIR__));
 define("CRM_ROOT", str_replace("config", "admin", __DIR__));
 define("MOBILE_VIEW_ROOT", str_replace("config", "mobile-web-view", __DIR__));
 
-$db = Database::connect();
+try {
+    $db = Database::connect();
+} catch (Exception $e) {
+    $db = null;
+}
 CompanyProfile::init();
 
 function JsonResponse(array $data = []) {

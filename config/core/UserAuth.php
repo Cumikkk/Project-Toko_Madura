@@ -57,11 +57,14 @@ class UserAuth {
     public static function authentication(): bool|string|int {
         try {
             global $db, $_SESSION, $_COOKIE;
+            $authData = self::getAuthData();
+            if(empty($authData['access_token']) && empty($authData['remember_token'])) {
+                return false;
+            }
+
             if(empty($db)) {
                 $db = Database::connect();
             }
-
-            $authData = self::getAuthData();
             if(empty($authData['access_token'])) {
                 if(empty($authData['remember_token'])) {
                     return false;
