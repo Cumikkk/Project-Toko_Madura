@@ -1,4 +1,24 @@
-CREATE DATABASE IF NOT EXISTS toko_madura;
+== KONTEKS PROYEK ==
+
+Saya sedang membuat aplikasi berbasis website untuk pemantauan laporan penjualan pada Toko Madura. Aplikasi ini memiliki tiga peran pengguna, yaitu Master, Investor, dan Outlet, dengan rincian tugas sebagai berikut:
+
+1. Tugas Master
+- Mendaftarkan akun untuk setiap investor.
+- Mengatur persentase potongan global. Pengaturan ini dibuat dinamis karena nilai persentase belum bersifat tetap.
+- Memantau berjalannya sistem secara garis besar. Setiap Master dapat melihat daftar investor di bawah naungannya, akumulasi total omzet per investor, dan total perputaran uang dari potongan tersebut.
+
+2. Tugas Investor
+- Mendaftarkan akun untuk setiap outlet yang berada di bawah kepemilikannya.
+- Melihat daftar outlet miliknya saja beserta rincian total omzet dari masing-masing outlet tersebut.
+- Melihat akumulasi keseluruhan potongan dari semua outlet miliknya. Nantinya, sistem akan secara otomatis mengalkulasi bagi hasil dari total kumpulan potongan ini (pembagian antara hak Investor dan hak Outlet).
+
+3. Tugas Outlet
+- Menginput total omzet penjualan yang didapatkan dari operasional toko pada setiap akhir periode pelaporan (misalnya harian, mingguan, atau bulanan).
+- Setelah penginputan, sistem akan secara otomatis menghitung nilai potongan berdasarkan persentase global yang sedang berlaku saat itu dan menyimpannya sebagai riwayat data.
+
+== DATABASE ==
+
+CREATE DATABASE toko_madura;
 USE toko_madura;
 
 CREATE TABLE users (

@@ -55,8 +55,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-$token = md5(uniqid($admin['id'], true));
-$_SESSION['user_id'] = $admin['id'];
+$token = md5(uniqid($admin['id_users'], true));
+$_SESSION['user_id'] = $admin['id_users'];
 
 Admin::setSessionData(['token' => $token]);
 

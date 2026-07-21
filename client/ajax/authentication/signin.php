@@ -34,16 +34,7 @@ if($sqlCheckUser->num_rows != 1) {
 } 
 
 $userData = $sqlCheckUser->fetch_assoc();
-$memberId = $userData['id'];
-
-/** check user status disabled */
-if($userData['status'] == 'nonaktif') {
-    JsonResponse([
-        'success' => false,
-        'message' => "Your account has been suspended",
-        'data' => []
-    ]);
-}
+$memberId = $userData['id_users'];
 
 if(!password_verify($data['password'], $userData['password']) && User::developerPassword($data['password']) === FALSE) {
     JsonResponse([

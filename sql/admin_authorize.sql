@@ -29,7 +29,7 @@ CREATE TABLE `admin_authorize`  (
   `updated_at` timestamp NULL DEFAULT NULL,
   UNIQUE INDEX `uniq_role`(`admin_id` ASC, `permission_id` ASC) USING BTREE,
   INDEX `fk_permission_id`(`permission_id` ASC) USING BTREE,
-  CONSTRAINT `admin_authorize_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `admin_authorize_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `users` (`id_users`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `admin_authorize_ibfk_3` FOREIGN KEY (`permission_id`) REFERENCES `admin_permissions` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
