@@ -4,13 +4,15 @@ use App\Models\Country;
 use App\Models\Helper;
 
 if(!$adminPermissionCore->isHavePermission($moduleId, "update")) {
-    die("<script>location.href = '/admin/view'; </script>");
+    $redirectUrl = \Config\Core\SystemInfo::app('ADMIN_URL') . '/admin/view';
+    die("<script>location.href = '{$redirectUrl}'; </script>");
 }
 
 $adminId = Helper::form_input($_GET['c'] ?? 0);
 $admin = Admin::findById($adminId);
 if(!$admin) {
-    die("<script>alert('ID Admin tidak valid'); location.href = '/admin'; </script>");
+    $redirectUrl = \Config\Core\SystemInfo::app('ADMIN_URL') . '/admin/view';
+    die("<script>alert('ID Admin tidak valid'); location.href = '{$redirectUrl}'; </script>");
 }
 ?>
 

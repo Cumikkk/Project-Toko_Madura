@@ -37,7 +37,7 @@ try {
             </div>
             <div class="card-body">
                 <?php foreach($authorizeModule as $group) : ?>
-                    <?php if($group['min_level'] >= $dataAdmin['ADM_LEVEL']) : ?>
+                    <?php if($dataAdmin['ADM_LEVEL'] == 1 || $group['min_level'] >= $dataAdmin['ADM_LEVEL']) : ?>
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead style="background-color: grey !important;">

@@ -45,7 +45,8 @@ class Admin extends AdminAuth {
                 'ADM_LEVEL' => 1,
                 'ADM_STS' => 1,
                 'ADMROLE_NAME' => ucfirst($rawUser['role']),
-                'role' => $rawUser['role']
+                'role' => $rawUser['role'],
+                'ADM_COUNTRY' => 7
             ];
 
         } catch (Exception $e) {
