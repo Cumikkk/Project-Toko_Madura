@@ -18,14 +18,14 @@ use App\Models\FileUpload;
         <div class="col-xxl-6 col-xl-5 col-4 d-flex align-items-center gap-20">
             <div class="main-logo d-lg-block d-none">
                 <div class="logo-big">
-                    <a href="/dashboard">
-                        <img src="/assets/images/logo-full-first-state-futures.svg" class="w-100 light-theme" alt="Logo">
-                        <img src="/assets/images/logo-full-first-state-futures-light.svg" class="w-100 dark-theme" alt="Logo">
+                    <a href="<?= SystemInfo::app('CLIENT_URL') ?>/dashboard">
+                        <img src="<?= SystemInfo::app('CLIENT_URL') ?>/assets/images/logo-full-first-state-futures.svg" class="w-100 light-theme" alt="Logo">
+                        <img src="<?= SystemInfo::app('CLIENT_URL') ?>/assets/images/logo-full-first-state-futures-light.svg" class="w-100 dark-theme" alt="Logo">
                     </a>
                 </div>
                 <div class="logo-small">
-                    <a href="/dashboard">
-                        <img src="/assets/images/favicon/ms-icon-144x144.png" alt="Logo">
+                    <a href="<?= SystemInfo::app('CLIENT_URL') ?>/dashboard">
+                        <img src="<?= SystemInfo::app('CLIENT_URL') ?>/assets/images/favicon/ms-icon-144x144.png" alt="Logo">
                     </a>
                 </div>
             </div>
@@ -35,9 +35,9 @@ use App\Models\FileUpload;
         </div>
         <div class="col-4 d-lg-none">
             <div class="mobile-logo">
-                <a href="/dashboard">
-                    <img src="/assets/images/logo-full-first-state-futures.svg" class="w-100 light-theme" alt="Logo">
-                    <img src="/assets/images/logo-full-first-state-futures-light.svg" class="w-100 dark-theme" alt="Logo">
+                <a href="<?= SystemInfo::app('CLIENT_URL') ?>/dashboard">
+                    <img src="<?= SystemInfo::app('CLIENT_URL') ?>/assets/images/logo-full-first-state-futures.svg" class="w-100 light-theme" alt="Logo">
+                    <img src="<?= SystemInfo::app('CLIENT_URL') ?>/assets/images/logo-full-first-state-futures-light.svg" class="w-100 dark-theme" alt="Logo">
                 </a>
             </div>
         </div>
@@ -117,10 +117,10 @@ use App\Models\FileUpload;
                                 </div>
                             </div>
                         </li>
-                        <li><a class="dropdown-item" href="/personal-information"><span class="dropdown-icon"><i class="fa-regular fa-circle-user"></i></span> Profile</a></li>
-                        <li><a class="dropdown-item" href="/help-center"><span class="dropdown-icon"><i class="fa-regular fa-circle-question"></i></span> Help</a></li>
+                        <li><a class="dropdown-item" href="<?= SystemInfo::app('CLIENT_URL') ?>/personal-information"><span class="dropdown-icon"><i class="fa-regular fa-circle-user"></i></span> Profile</a></li>
+                        <li><a class="dropdown-item" href="<?= SystemInfo::app('CLIENT_URL') ?>/help-center"><span class="dropdown-icon"><i class="fa-regular fa-circle-question"></i></span> Help</a></li>
                         <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="/logout"><span class="dropdown-icon"><i class="fa-regular fa-arrow-right-from-bracket"></i></span> Logout</a></li>
+                        <li><a class="dropdown-item" href="<?= SystemInfo::app('CLIENT_URL') ?>/logout"><span class="dropdown-icon"><i class="fa-regular fa-arrow-right-from-bracket"></i></span> Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -148,18 +148,18 @@ use App\Models\FileUpload;
                     </div>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="/personal-information"><span class="dropdown-icon"><i class="fa-regular fa-circle-user"></i></span> Profile</a>
+                    <a class="dropdown-item" href="<?= SystemInfo::app('CLIENT_URL') ?>/personal-information"><span class="dropdown-icon"><i class="fa-regular fa-circle-user"></i></span> Profile</a>
                 </li>
                 <li>
-                    <a class="dropdown-item" href="/help-center"><span class="dropdown-icon"><i class="fa-regular fa-circle-question"></i></span> Help</a>
+                    <a class="dropdown-item" href="<?= SystemInfo::app('CLIENT_URL') ?>/help-center"><span class="dropdown-icon"><i class="fa-regular fa-circle-question"></i></span> Help</a>
                 </li>
             </ul>
         </div>
     </div>
     <div class="bottom-panel">
         <div class="button-group">
-            <a href="/personal-information"><i class="fa-light fa-gear"></i><span>Settings</span></a>
-            <a href="/logout"><i class="fa-light fa-power-off"></i><span>Logout</span></a>
+            <a href="<?= SystemInfo::app('CLIENT_URL') ?>/personal-information"><i class="fa-light fa-gear"></i><span>Settings</span></a>
+            <a href="<?= SystemInfo::app('CLIENT_URL') ?>/logout"><i class="fa-light fa-power-off"></i><span>Logout</span></a>
         </div>
     </div>
 </div>

@@ -10,8 +10,8 @@ use Config\Core\SystemInfo;
 $queryParam = Helper::getSafeInput($_GET);
 $page = $queryParam['a'] ?? "";
 if($page == "logout") {
-	Admin::logout();
-    die("<script>location.href = '/';</script>");
+    Admin::logout();
+    die("<script>location.href = '" . SystemInfo::app('ADMIN_URL') . "';</script>");
 }
 
 /** Authentication */

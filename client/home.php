@@ -17,12 +17,12 @@ if (!empty($_GET["a"])) {
 
 if ($pageFile == "logout") {
     User::logout();
-    die("<script>location.href ='/'</script>");
+    die("<script>location.href = '" . SystemInfo::app('CLIENT_URL') . "';</script>");
 }
 
 $user = User::user();
 if (!$user) {
-    die("<script>alert('Session Expired, please re-login'); location.href ='/'</script>");
+    die("<script>alert('Session Expired, please re-login'); location.href = '" . SystemInfo::app('CLIENT_URL') . "';</script>");
 }
 
 $userid = md5(md5($user['MBR_ID'])) ?? "";
