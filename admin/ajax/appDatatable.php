@@ -11,6 +11,7 @@ try {
     global $_SESSION, $_COOKIE;
     global $db;
     $aws_folder = "https://allmediaindo-2.s3.ap-southeast-1.amazonaws.com/gfsprime/";
+    Database::connect();
     $dt = new Datatables( new MySQL([ 
         'host'     => Database::$host,
         'port'     => Database::$port,
