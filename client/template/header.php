@@ -26,7 +26,7 @@ use Config\Core\SystemInfo;
                 </div>
                 <div class="logo-small">
                     <a href="<?= SystemInfo::app('CLIENT_URL') ?>/dashboard">
-                        <img src="<?= SystemInfo::app('CLIENT_URL') ?>/assets/favicon.png" alt="Logo">
+                        <img src="<?= SystemInfo::app('CLIENT_URL') ?>/assets/images/favicon/favicon.ico" alt="Logo">
                     </a>
                 </div>
             </div>
