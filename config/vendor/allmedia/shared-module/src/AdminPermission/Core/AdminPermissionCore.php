@@ -119,7 +119,7 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
                     ap.`code`,
 	                ap.`desc`,
                     ap.url,
-                    aa.`status`,
+                    COALESCE(aa.`status`, -1) as status,
                     aa.created_at,
                     aa.updated_at
                 FROM admin_permissions ap
@@ -202,14 +202,32 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
 
     public function hasPermission(array $modulePermission, string $url = ""): array|bool {
         try {
-            $requestUri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
             if(!empty($url)) {
                 $requestUri = $url;
             } else {
-                // Fix for local subfolder deployment in Admin portal
-                $adminUrlPath = parse_url(\Config\Core\SystemInfo::app('ADMIN_URL'), PHP_URL_PATH);
-                if (strpos($requestUri, $adminUrlPath) === 0) {
-                    $requestUri = substr($requestUri, strlen($adminUrlPath));
+                $queryA = $_GET['a'] ?? '';
+                $queryB = $_GET['b'] ?? '';
+                $queryC = $_GET['c'] ?? '';
+
+                if(!empty($queryA)) {
+                    $requestUri = '/' . $queryA;
+                    if(!empty($queryB)) {
+                        $requestUri .= '/' . $queryB;
+                    }
+                    if(!empty($queryC)) {
+                        $requestUri .= '/' . $queryC;
+                    }
+                } else {
+                    $requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?? '';
+                    $adminUrlRaw = \Config\Core\SystemInfo::app('ADMIN_URL') ?? '';
+                    $adminUrlPath = parse_url($adminUrlRaw, PHP_URL_PATH);
+                    if (!empty($adminUrlPath) && strpos($requestUri, $adminUrlPath) === 0) {
+                        $requestUri = substr($requestUri, strlen($adminUrlPath));
+                    }
+                }
+
+                if (empty($requestUri) || $requestUri === '/' || $requestUri === '/home.php' || $requestUri === '/index.php') {
+                    $requestUri = '/dashboard';
                 }
 
                 // Fallback for single admin URLs (e.g. /permission/me, /view, /create, /update) 
@@ -254,7 +272,7 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
                 return false;
             }
 
-            if($permission['status'] == 0) {
+            if(isset($permission['status']) && (int)$permission['status'] === 0) {
                 return false;
             }
 
