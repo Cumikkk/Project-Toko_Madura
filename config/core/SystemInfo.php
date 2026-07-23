@@ -40,6 +40,10 @@ class SystemInfo {
                 $scriptName = $_SERVER['SCRIPT_NAME'] ?? '';
                 $currentFolder = ($input === 'CLIENT_URL') ? 'client' : 'admin';
                 
+                if (strpos(strtolower($host), $currentFolder) !== false && strpos($scriptName, "/$currentFolder") === false) {
+                    return rtrim($protocol . $host, '/');
+                }
+                
                 if (strpos($scriptName, "/$currentFolder") !== false) {
                     $basePath = substr($scriptName, 0, strpos($scriptName, "/$currentFolder") + strlen("/$currentFolder"));
                     return rtrim($protocol . $host . $basePath, '/');
