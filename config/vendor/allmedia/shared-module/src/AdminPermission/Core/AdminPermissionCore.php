@@ -256,7 +256,8 @@ class AdminPermissionCore implements AdminPermissionCoreInterface {
                         $regexPattern = str_replace("\/.*", "(?:/.*)?", $pattern2);
                         $regex = "#^" . $regexPattern . "$#";
 
-                        if(preg_match($regex, $requestUri)) {
+                        $cleanUri = preg_replace('#^/admin/#', '/', $requestUri);
+                        if(preg_match($regex, $requestUri) || preg_match($regex, $cleanUri)) {
                             $perm['min_level'] = $module['id'];
                             $perm['module_id'] = $module['id'];
                             $perm['fileurl'] = str_replace("/^[a-zA-Z0-9\-]+$/", "", $pattern1);
