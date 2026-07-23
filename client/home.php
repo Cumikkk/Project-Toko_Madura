@@ -70,7 +70,7 @@ Logger::client_log([
     <link rel="stylesheet" href="<?= SystemInfo::app('CLIENT_URL') ?>/assets/vendor/css/bootstrap.min.css">
     <link rel="stylesheet" href="<?= SystemInfo::app('CLIENT_URL') ?>/assets/css/style.css">
     <link rel="stylesheet" href="<?= SystemInfo::app('CLIENT_URL') ?>/assets/css/custom.css">
-    <link rel="stylesheet" id="primaryColor" href="<?= SystemInfo::app('CLIENT_URL') ?>/assets/css/<?= ($user['MBR_THEME'] == '1') ? 'gold' : 'gold'; ?>-color.css">
+    <link rel="stylesheet" id="primaryColor" href="<?= SystemInfo::app('CLIENT_URL') ?>/assets/css/red-color.css">
     <script src="<?= SystemInfo::app('CLIENT_URL') ?>/assets/vendor/js/jquery-3.6.0.min.js"></script>
     <script>window.CLIENT_URL = "<?= SystemInfo::app('CLIENT_URL') ?>";</script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Dropify/0.2.2/css/dropify.css" integrity="sha512-In/+MILhf6UMDJU4ZhDL0R0fEpsp4D3Le23m6+ujDWXwl3whwpucJG1PEmI3B07nyJx+875ccs+yX2CqQJUxUw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
