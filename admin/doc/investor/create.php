@@ -74,7 +74,7 @@ if(!$adminPermissionCore->isHavePermission($moduleId, "create")) {
                             </div>
                         </div>
                         <div class="col-md-12 mt-4 d-flex justify-content-end gap-2">
-                            <a href="<?= pathbreadcrumb(1) ?>/investor/view" class="btn btn-secondary">Batal</a>
+                            <a href="<?= \Config\Core\SystemInfo::app('ADMIN_URL') ?>/investor/view" class="btn btn-secondary">Batal</a>
                             <button type="submit" class="btn btn-primary" data-original-text="Submit">Simpan Investor</button>
                         </div>
                     </div>

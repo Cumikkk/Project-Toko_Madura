@@ -3,7 +3,7 @@ use App\Models\Helper;
 use Config\Core\Database;
 use Config\Core\SystemInfo;
 
-if(!$adminPermissionCore->hasPermission($authorizedPermission, "/admin/investor/create")) {
+if(!$adminPermissionCore->hasPermission($authorizedPermission, $url)) {
     JsonResponse([
         'code'      => 200,
         'success'   => false,
