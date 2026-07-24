@@ -4,11 +4,30 @@ use Config\Core\SystemInfo;
 
 $db = Database::connect();
 
-// Fetch investors list
+$loggedInLevel = intval($user['ADM_LEVEL'] ?? 1);
+$loggedInId    = intval($user['ADM_ID'] ?? 1);
+
+// Role Filtering:
+// Programmer (Level 1): Show all investors nationally
+// Master Owner (Level 2): Show only investors belonging to this Master Owner
+// Admin Staff (Level 3): Show only investors belonging to Master Owner
+if ($loggedInLevel == 1) {
+    $whereClause = "";
+} elseif ($loggedInLevel == 2) {
+    $whereClause = "WHERE i.id_master = {$loggedInId}";
+} else {
+    // Admin Staff (Level 3): Filter by Master Owner ID (2)
+    $whereClause = "WHERE i.id_master = 2";
+}
+
+// Fetch investors list with Master Owner name
 $investors = $db->query("
-    SELECT i.*, u.nama_lengkap, u.username, u.email, u.no_hp 
+    SELECT i.*, u.nama_lengkap, u.username, u.email, u.no_hp,
+           u_master.nama_lengkap as nama_master
     FROM investor i
     JOIN users u ON (u.id_users = i.id_users)
+    LEFT JOIN users u_master ON (u_master.id_users = i.id_master)
+    {$whereClause}
     ORDER BY u.nama_lengkap ASC
 ");
 ?>
@@ -29,7 +48,7 @@ $investors = $db->query("
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
                     <h6 class="main-content-label mb-1">List Investor Toko Madura</h6>
-                    <p class="text-muted card-sub-title mb-0">Daftar semua investor beserta persentase pembagian hasil mereka.</p>
+                    <p class="text-muted card-sub-title mb-0">Daftar investor pemodal beserta persentase pembagian hasil mereka.</p>
                 </div>
                 <?php if($adminPermissionCore->isHavePermission($moduleId, "create")) : ?>
                     <a href="<?= SystemInfo::app('ADMIN_URL') ?>/investor/create" class="btn btn-primary btn-sm"><i class="fas fa-plus me-1"></i> Tambah Investor</a>
@@ -37,17 +56,18 @@ $investors = $db->query("
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover align-middle">
+                    <table class="table table-bordered table-striped table-hover align-middle" id="investor-table">
                         <thead>
                             <tr>
-                                <th class="text-center">No</th>
+                                <th class="text-center" style="width: 5%;">No</th>
                                 <th>Nama Lengkap</th>
                                 <th>Username</th>
                                 <th>No HP</th>
                                 <th>Email</th>
                                 <th>Alamat Domisili</th>
                                 <th class="text-center">Bagi Hasil (%)</th>
-                                <th class="text-center">Aksi</th>
+                                <th>Master Owner</th>
+                                <th class="text-center" style="width: 10%;">#</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,13 +81,14 @@ $investors = $db->query("
                                         <td><?= htmlspecialchars($row['email'] ?? '-') ?></td>
                                         <td><?= htmlspecialchars($row['alamat_investor'] ?? '-') ?></td>
                                         <td class="text-center"><span class="badge bg-primary fs-6"><?= number_format($row['persen_bagian_investor'], 2, ',', '.') ?>%</span></td>
+                                        <td><span class="badge bg-info"><?= htmlspecialchars($row['nama_master'] ?? 'Master Owner') ?></span></td>
                                         <td class="text-center">
-                                            <div class="btn-group btn-group-sm" role="group">
+                                            <div class="action d-flex justify-content-center gap-2">
                                                 <?php if($adminPermissionCore->isHavePermission($moduleId, "update")) : ?>
-                                                    <a href="<?= SystemInfo::app('ADMIN_URL') ?>/investor/create?id=<?= $row['id_investor'] ?>" class="btn btn-warning btn-sm me-1" title="Edit Investor"><i class="fas fa-edit"></i> Edit</a>
+                                                    <a href="<?= SystemInfo::app('ADMIN_URL') ?>/investor/create?id=<?= $row['id_investor'] ?>" class="btn btn-warning btn-sm" title="Edit Investor"><i class="fas fa-edit"></i></a>
                                                 <?php endif; ?>
                                                 <?php if($adminPermissionCore->isHavePermission($moduleId, "delete")) : ?>
-                                                    <button type="button" class="btn btn-danger btn-sm" title="Hapus Investor" onclick="deleteInvestor(<?= $row['id_investor'] ?>, '<?= htmlspecialchars($row['nama_lengkap']) ?>')"><i class="fas fa-trash"></i> Hapus</button>
+                                                    <button type="button" class="btn btn-danger btn-sm btn-delete" title="Hapus Investor" onclick="deleteInvestor(<?= $row['id_investor'] ?>, '<?= htmlspecialchars($row['nama_lengkap']) ?>')"><i class="fas fa-trash"></i></button>
                                                 <?php endif; ?>
                                             </div>
                                         </td>
@@ -75,7 +96,7 @@ $investors = $db->query("
                                 <?php endwhile; ?>
                             <?php else : ?>
                                 <tr>
-                                    <td colspan="8" class="text-center text-muted py-4">Belum ada data investor terdaftar.</td>
+                                    <td colspan="9" class="text-center text-muted py-4">Belum ada data investor terdaftar.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -87,6 +108,27 @@ $investors = $db->query("
 </div>
 
 <script type="text/javascript">
+$(document).ready(function() {
+    if ($.fn.DataTable && !$.fn.DataTable.isDataTable('#investor-table')) {
+        $('#investor-table').DataTable({
+            responsive: true,
+            language: {
+                searchPlaceholder: 'Cari investor...',
+                sSearch: '',
+                lengthMenu: 'Show _MENU_ entries',
+                info: 'Showing _START_ to _END_ of _TOTAL_ entries',
+                paginate: {
+                    first: 'First',
+                    last: 'Last',
+                    next: 'Next',
+                    previous: 'Previous'
+                }
+            },
+            order: [[1, 'asc']]
+        });
+    }
+});
+
 function deleteInvestor(id, name) {
     Swal.fire({
         title: 'Konfirmasi Hapus',
@@ -99,7 +141,15 @@ function deleteInvestor(id, name) {
         cancelButtonText: 'Batal'
     }).then((result) => {
         if (result.isConfirmed) {
-            $.post("<?= SystemInfo::app('ADMIN_URL') ?>/ajax/post/investor/delete", { id: id }, function(resp) {
+            Swal.fire({
+                text: "Loading...",
+                allowOutsideClick: false,
+                didOpen: function() {
+                    Swal.showLoading();
+                }
+            });
+
+            $.post("<?= SystemInfo::app('ADMIN_URL') ?>/ajax/post/investor/delete", { id_investor: id, id: id }, function(resp) {
                 if (resp.success) {
                     Swal.fire({
                         icon: 'success',
@@ -117,7 +167,13 @@ function deleteInvestor(id, name) {
                         text: resp.message
                     });
                 }
-            }, 'json');
+            }, 'json').fail(function(xhr) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: 'Terjadi kesalahan sistem saat menghapus data'
+                });
+            });
         }
     });
 }

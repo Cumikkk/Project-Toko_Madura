@@ -4,6 +4,21 @@ use Config\Core\SystemInfo;
 
 $db = Database::connect();
 
+$loggedInLevel = intval($user['ADM_LEVEL'] ?? 1);
+$loggedInId    = intval($user['ADM_ID'] ?? 1);
+
+// Role Filtering for Outlets:
+// Programmer (Level 1): See all outlets nationally
+// Master Owner (Level 2): See only outlets belonging to his Master ID
+// Admin Staff (Level 3): See only outlets belonging to Master Owner
+if ($loggedInLevel == 1) {
+    $whereClause = "";
+} elseif ($loggedInLevel == 2) {
+    $whereClause = "WHERE inv.id_master = {$loggedInId}";
+} else {
+    $whereClause = "WHERE inv.id_master = 2";
+}
+
 // Fetch outlets list with investor and user details
 $outlets = $db->query("
     SELECT o.*, u.nama_lengkap as pengelola_toko, u.no_hp as no_hp_toko, 
@@ -12,6 +27,7 @@ $outlets = $db->query("
     LEFT JOIN users u ON (u.id_users = o.id_users)
     LEFT JOIN investor inv ON (inv.id_investor = o.id_investor)
     LEFT JOIN users inv_user ON (inv_user.id_users = inv.id_users)
+    {$whereClause}
     ORDER BY o.nama_outlet ASC
 ");
 ?>
