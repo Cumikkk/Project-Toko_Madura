@@ -34,6 +34,9 @@ $outlets = $db->query("
                     <h6 class="main-content-label mb-1">Daftar Outlet & Pemetaan Pemodal</h6>
                     <p class="text-muted card-sub-title mb-0">Daftar seluruh cabang Toko Madura beserta investor pemodal di belakangnya.</p>
                 </div>
+                <?php if($adminPermissionCore->isHavePermission($moduleId, "create")) : ?>
+                    <a href="<?= SystemInfo::app('ADMIN_URL') ?>/outlet/create" class="btn btn-primary btn-sm"><i class="fas fa-plus me-1"></i> Tambah Outlet</a>
+                <?php endif; ?>
             </div>
             <div class="card-body">
                 <div class="table-responsive">
