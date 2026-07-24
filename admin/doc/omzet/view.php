@@ -16,7 +16,7 @@ $laporanOmzet = $db->query("
 
 <div class="page-header">
     <div>
-        <h2 class="main-content-title tx-24 mg-b-5">Monitoring Omzet Toko</h2>
+        <h2 class="main-content-title tx-24 mg-b-5">Monitoring Omzet Toko Madura</h2>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="<?= SystemInfo::app('ADMIN_URL') ?>/dashboard">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Omzet</li>
@@ -62,7 +62,7 @@ $laporanOmzet = $db->query("
                                         <td class="text-end text-danger">Rp <?= number_format($row['nominal_potongan'], 0, ',', '.') ?></td>
                                         <td class="text-center"><?= date('d/m/Y H:i', strtotime($row['waktu_input'])) ?></td>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-success btn-sm" onclick="alert('Laporan Omzet: <?= htmlspecialchars($row['nama_outlet']) ?>\nPeriode: <?= date('d M Y', strtotime($row['periode_laporan'])) ?>\nTotal Omzet: Rp <?= number_format($row['omzet'], 0, ',', '.') ?>\nPotongan: Rp <?= number_format($row['nominal_potongan'], 0, ',', '.') ?>\nStatus: TERVERIFIKASI')"><i class="fas fa-check-circle me-1"></i> Verifikasi</button>
+                                            <button type="button" class="btn btn-success btn-sm" onclick="verifikasiNota(<?= $row['id_laporan_omzet'] ?>, '<?= htmlspecialchars($row['nama_outlet']) ?>', 'Rp <?= number_format($row['omzet'], 0, ',', '.') ?>')"><i class="fas fa-check-circle me-1"></i> Verifikasi Nota</button>
                                         </td>
                                     </tr>
                                 <?php endwhile; ?>
@@ -78,3 +78,38 @@ $laporanOmzet = $db->query("
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+function verifikasiNota(id, namaToko, omzetText) {
+    Swal.fire({
+        title: 'Verifikasi Nota Omzet',
+        html: `Apakah Anda yakin ingin memverifikasi laporan omzet untuk <b>${namaToko}</b> dengan nominal <b>${omzetText}</b>?`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Verifikasi!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post("<?= SystemInfo::app('ADMIN_URL') ?>/ajax/post/omzet/verify", { id: id }, function(resp) {
+                if (resp.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Terverifikasi!',
+                        text: resp.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: resp.message
+                    });
+                }
+            }, 'json');
+        }
+    });
+}
+</script>

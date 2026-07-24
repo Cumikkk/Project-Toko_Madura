@@ -2,8 +2,7 @@
 use App\Models\Helper;
 use Config\Core\Database;
 
-$data = Helper::getSafeInput($_POST);
-$idInvestor = intval($data['id_investor'] ?? 0);
+$idInvestor = intval($data['id_investor'] ?? ($data['id'] ?? 0));
 
 if ($idInvestor <= 0) {
     JsonResponse([

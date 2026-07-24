@@ -15,9 +15,9 @@ $investors = $db->query("
 
 <div class="page-header">
     <div>
-        <h2 class="main-content-title tx-24 mg-b-5">Daftar Investor</h2>
+        <h2 class="main-content-title tx-24 mg-b-5">Daftar Investor Toko Madura</h2>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="<?= SystemInfo::app('ADMIN_URL') ?>/dashboard">Home</a></li>
             <li class="breadcrumb-item active" aria-current="page">Investor</li>
         </ol>
     </div>
@@ -62,9 +62,14 @@ $investors = $db->query("
                                         <td><?= htmlspecialchars($row['alamat_investor'] ?? '-') ?></td>
                                         <td class="text-center"><span class="badge bg-primary fs-6"><?= number_format($row['persen_bagian_investor'], 2, ',', '.') ?>%</span></td>
                                         <td class="text-center">
-                                            <?php if($adminPermissionCore->isHavePermission($moduleId, "update")) : ?>
-                                                <a href="<?= SystemInfo::app('ADMIN_URL') ?>/investor/create?id=<?= $row['id_investor'] ?>" class="btn btn-warning btn-sm me-1" title="Edit Investor"><i class="fas fa-edit"></i> Edit Investor</a>
-                                            <?php endif; ?>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <?php if($adminPermissionCore->isHavePermission($moduleId, "update")) : ?>
+                                                    <a href="<?= SystemInfo::app('ADMIN_URL') ?>/investor/create?id=<?= $row['id_investor'] ?>" class="btn btn-warning btn-sm me-1" title="Edit Investor"><i class="fas fa-edit"></i> Edit</a>
+                                                <?php endif; ?>
+                                                <?php if($adminPermissionCore->isHavePermission($moduleId, "delete")) : ?>
+                                                    <button type="button" class="btn btn-danger btn-sm" title="Hapus Investor" onclick="deleteInvestor(<?= $row['id_investor'] ?>, '<?= htmlspecialchars($row['nama_lengkap']) ?>')"><i class="fas fa-trash"></i> Hapus</button>
+                                                <?php endif; ?>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php endwhile; ?>
@@ -80,3 +85,40 @@ $investors = $db->query("
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+function deleteInvestor(id, name) {
+    Swal.fire({
+        title: 'Konfirmasi Hapus',
+        text: "Apakah Anda yakin ingin menghapus investor '" + name + "'?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post("<?= SystemInfo::app('ADMIN_URL') ?>/ajax/post/investor/delete", { id: id }, function(resp) {
+                if (resp.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Terhapus!',
+                        text: resp.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: resp.message
+                    });
+                }
+            }, 'json');
+        }
+    });
+}
+</script>

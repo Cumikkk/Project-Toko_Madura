@@ -71,7 +71,15 @@ $outlets = $db->query("
                                         </td>
                                         <td><?= htmlspecialchars($row['alamat_outlet'] ?? '-') ?></td>
                                         <td class="text-center">
-                                            <button type="button" class="btn btn-info btn-sm text-white" onclick="alert('Kode: <?= htmlspecialchars($row['kode_outlet']) ?>\nToko: <?= htmlspecialchars($row['nama_outlet']) ?>\nPengelola: <?= htmlspecialchars($row['pengelola_toko'] ?? '-') ?>\nNo. HP: <?= htmlspecialchars($row['no_hp_toko'] ?? '-') ?>\nInvestor: <?= htmlspecialchars($row['nama_investor'] ?? 'Belum ada') ?>\nAlamat: <?= htmlspecialchars($row['alamat_outlet'] ?? '-') ?>')"><i class="fas fa-eye me-1"></i> Detail</button>
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <button type="button" class="btn btn-info btn-sm text-white me-1" title="Detail Toko" onclick="alert('Kode: <?= htmlspecialchars($row['kode_outlet']) ?>\nToko: <?= htmlspecialchars($row['nama_outlet']) ?>\nPengelola: <?= htmlspecialchars($row['pengelola_toko'] ?? '-') ?>\nNo. HP: <?= htmlspecialchars($row['no_hp_toko'] ?? '-') ?>\nInvestor: <?= htmlspecialchars($row['nama_investor'] ?? 'Belum ada') ?>\nAlamat: <?= htmlspecialchars($row['alamat_outlet'] ?? '-') ?>')"><i class="fas fa-eye"></i> Detail</button>
+                                                <?php if($adminPermissionCore->isHavePermission($moduleId, "update")) : ?>
+                                                    <a href="<?= SystemInfo::app('ADMIN_URL') ?>/outlet/create?id=<?= $row['id_outlet'] ?>" class="btn btn-warning btn-sm me-1" title="Edit Toko"><i class="fas fa-edit"></i> Edit</a>
+                                                <?php endif; ?>
+                                                <?php if($adminPermissionCore->isHavePermission($moduleId, "delete")) : ?>
+                                                    <button type="button" class="btn btn-danger btn-sm" title="Hapus Toko" onclick="deleteOutlet(<?= $row['id_outlet'] ?>, '<?= htmlspecialchars($row['nama_outlet']) ?>')"><i class="fas fa-trash"></i> Hapus</button>
+                                                <?php endif; ?>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php endwhile; ?>
@@ -87,3 +95,40 @@ $outlets = $db->query("
         </div>
     </div>
 </div>
+
+<script type="text/javascript">
+function deleteOutlet(id, name) {
+    Swal.fire({
+        title: 'Konfirmasi Hapus',
+        text: "Apakah Anda yakin ingin menghapus toko cabang '" + name + "'?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Ya, Hapus!',
+        cancelButtonText: 'Batal'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.post("<?= SystemInfo::app('ADMIN_URL') ?>/ajax/post/outlet/delete", { id: id }, function(resp) {
+                if (resp.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Terhapus!',
+                        text: resp.message,
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: resp.message
+                    });
+                }
+            }, 'json');
+        }
+    });
+}
+</script>
