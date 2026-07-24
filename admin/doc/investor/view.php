@@ -37,34 +37,43 @@ $investors = $db->query("
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped">
+                    <table class="table table-bordered table-striped table-hover align-middle">
                         <thead>
                             <tr>
-                                <th>No</th>
+                                <th class="text-center">No</th>
                                 <th>Nama Lengkap</th>
                                 <th>Username</th>
                                 <th>No HP</th>
                                 <th>Email</th>
-                                <th>Alamat</th>
-                                <th>Bagi Hasil (%)</th>
+                                <th>Alamat Domisili</th>
+                                <th class="text-center">Bagi Hasil (%)</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if ($investors && $investors->num_rows > 0) : ?>
                                 <?php $no = 1; while ($row = $investors->fetch_assoc()) : ?>
                                     <tr>
-                                        <td><?= $no++ ?></td>
-                                        <td><?= htmlspecialchars($row['nama_lengkap']) ?></td>
-                                        <td><?= htmlspecialchars($row['username']) ?></td>
+                                        <td class="text-center"><?= $no++ ?></td>
+                                        <td><strong><?= htmlspecialchars($row['nama_lengkap']) ?></strong></td>
+                                        <td><code><?= htmlspecialchars($row['username']) ?></code></td>
                                         <td><?= htmlspecialchars($row['no_hp'] ?? '-') ?></td>
                                         <td><?= htmlspecialchars($row['email'] ?? '-') ?></td>
                                         <td><?= htmlspecialchars($row['alamat_investor'] ?? '-') ?></td>
-                                        <td><span class="badge bg-primary"><?= number_format($row['persen_bagian_investor'], 2, ',', '.') ?>%</span></td>
+                                        <td class="text-center"><span class="badge bg-primary fs-6"><?= number_format($row['persen_bagian_investor'], 2, ',', '.') ?>%</span></td>
+                                        <td class="text-center">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <button type="button" class="btn btn-info btn-sm text-white me-1" title="Detail Investor" onclick="alert('Investor: <?= htmlspecialchars($row['nama_lengkap']) ?>\nUsername: <?= htmlspecialchars($row['username']) ?>\nAlamat: <?= htmlspecialchars($row['alamat_investor'] ?? '-') ?>\nBagi Hasil: <?= $row['persen_bagian_investor'] ?>%')"><i class="fas fa-eye"></i> Detail</button>
+                                                <?php if($adminPermissionCore->isHavePermission($moduleId, "update")) : ?>
+                                                    <a href="<?= SystemInfo::app('ADMIN_URL') ?>/investor/create?id=<?= $row['id_investor'] ?>" class="btn btn-warning btn-sm me-1" title="Edit Investor"><i class="fas fa-edit"></i> Edit</a>
+                                                <?php endif; ?>
+                                            </div>
+                                        </td>
                                     </tr>
                                 <?php endwhile; ?>
                             <?php else : ?>
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted">Belum ada data investor terdaftar.</td>
+                                    <td colspan="8" class="text-center text-muted py-4">Belum ada data investor terdaftar.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>

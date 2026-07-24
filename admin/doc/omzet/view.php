@@ -35,36 +35,40 @@ $laporanOmzet = $db->query("
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover">
+                    <table class="table table-bordered table-striped table-hover align-middle">
                         <thead>
                             <tr>
-                                <th>No</th>
+                                <th class="text-center">No</th>
                                 <th>Periode Laporan</th>
                                 <th>Nama Outlet</th>
                                 <th>Pengelola</th>
-                                <th>Total Omzet (Rp)</th>
-                                <th>Potongan Platform (%)</th>
-                                <th>Nominal Potongan (Rp)</th>
-                                <th>Waktu Input</th>
+                                <th class="text-end">Total Omzet (Rp)</th>
+                                <th class="text-center">Potongan (%)</th>
+                                <th class="text-end">Potongan (Rp)</th>
+                                <th class="text-center">Waktu Input</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if ($laporanOmzet && $laporanOmzet->num_rows > 0) : ?>
                                 <?php $no = 1; while ($row = $laporanOmzet->fetch_assoc()) : ?>
                                     <tr>
-                                        <td><?= $no++ ?></td>
+                                        <td class="text-center"><?= $no++ ?></td>
                                         <td><strong><?= date('d M Y', strtotime($row['periode_laporan'])) ?></strong></td>
                                         <td><span class="badge bg-primary"><?= htmlspecialchars($row['nama_outlet']) ?></span></td>
                                         <td><?= htmlspecialchars($row['pengelola'] ?? '-') ?></td>
                                         <td class="text-end fw-bold text-success">Rp <?= number_format($row['omzet'], 0, ',', '.') ?></td>
                                         <td class="text-center"><?= number_format($row['presentase_potongan'], 2, ',', '.') ?>%</td>
                                         <td class="text-end text-danger">Rp <?= number_format($row['nominal_potongan'], 0, ',', '.') ?></td>
-                                        <td><?= date('d/m/Y H:i', strtotime($row['waktu_input'])) ?></td>
+                                        <td class="text-center"><?= date('d/m/Y H:i', strtotime($row['waktu_input'])) ?></td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-success btn-sm" onclick="alert('Laporan Omzet: <?= htmlspecialchars($row['nama_outlet']) ?>\nPeriode: <?= date('d M Y', strtotime($row['periode_laporan'])) ?>\nTotal Omzet: Rp <?= number_format($row['omzet'], 0, ',', '.') ?>\nPotongan: Rp <?= number_format($row['nominal_potongan'], 0, ',', '.') ?>\nStatus: TERVERIFIKASI')"><i class="fas fa-check-circle me-1"></i> Verifikasi</button>
+                                        </td>
                                     </tr>
                                 <?php endwhile; ?>
                             <?php else : ?>
                                 <tr>
-                                    <td colspan="8" class="text-center text-muted">Belum ada laporan omzet toko yang dimasukkan.</td>
+                                    <td colspan="9" class="text-center text-muted py-4">Belum ada laporan omzet toko yang dimasukkan.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>

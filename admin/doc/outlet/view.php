@@ -37,23 +37,24 @@ $outlets = $db->query("
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover">
+                    <table class="table table-bordered table-striped table-hover align-middle">
                         <thead>
                             <tr>
-                                <th>No</th>
+                                <th class="text-center">No</th>
                                 <th>Kode Outlet</th>
                                 <th>Nama Toko / Cabang</th>
                                 <th>Pengelola (Kasir)</th>
                                 <th>No. HP</th>
                                 <th>Investor Pemodal</th>
                                 <th>Alamat Toko</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if ($outlets && $outlets->num_rows > 0) : ?>
                                 <?php $no = 1; while ($row = $outlets->fetch_assoc()) : ?>
                                     <tr>
-                                        <td><?= $no++ ?></td>
+                                        <td class="text-center"><?= $no++ ?></td>
                                         <td><span class="badge bg-secondary"><?= htmlspecialchars($row['kode_outlet']) ?></span></td>
                                         <td><strong class="text-primary"><?= htmlspecialchars($row['nama_outlet']) ?></strong></td>
                                         <td><?= htmlspecialchars($row['pengelola_toko'] ?? '-') ?></td>
@@ -66,11 +67,14 @@ $outlets = $db->query("
                                             <?php endif; ?>
                                         </td>
                                         <td><?= htmlspecialchars($row['alamat_outlet'] ?? '-') ?></td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-info btn-sm text-white" onclick="alert('Kode: <?= htmlspecialchars($row['kode_outlet']) ?>\nToko: <?= htmlspecialchars($row['nama_outlet']) ?>\nPengelola: <?= htmlspecialchars($row['pengelola_toko'] ?? '-') ?>\nNo. HP: <?= htmlspecialchars($row['no_hp_toko'] ?? '-') ?>\nInvestor: <?= htmlspecialchars($row['nama_investor'] ?? 'Belum ada') ?>\nAlamat: <?= htmlspecialchars($row['alamat_outlet'] ?? '-') ?>')"><i class="fas fa-eye me-1"></i> Detail</button>
+                                        </td>
                                     </tr>
                                 <?php endwhile; ?>
                             <?php else : ?>
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted">Belum ada data cabang toko terdaftar.</td>
+                                    <td colspan="8" class="text-center text-muted py-4">Belum ada data cabang toko terdaftar.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>

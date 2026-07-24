@@ -30,35 +30,20 @@ class Admin extends AdminAuth {
                 $db = Database::connect();
             }
 
-            $sqlCheck = $db->query("SELECT * FROM users WHERE id_users = {$idAdm} AND role = 'master' LIMIT 1");
+            $sqlCheck = $db->query("SELECT * FROM users WHERE id_users = {$idAdm} AND role IN ('programmer', 'master', 'admin_staf') LIMIT 1");
             if($sqlCheck->num_rows != 1) {
                 return [];
             }
             $rawUser = $sqlCheck->fetch_assoc();
+            $role = $rawUser['role'];
 
-            // Determine dynamic ADM_LEVEL based on permissions in admin_authorize
-            // Level 1 = Programmer (has Developer modules 5/6 permissions)
-            // Level 2 = Master Owner (has Admin module 4 permissions)
-            // Level 3 = Admin Staf (only basic modules 1/2/3 permissions)
             $level = 3;
-            $sqlPerms = $db->query("
-                SELECT ap.module_id 
-                FROM admin_authorize aa 
-                JOIN admin_permissions ap ON (ap.id = aa.permission_id) 
-                WHERE aa.admin_id = {$idAdm} AND (aa.status = -1 OR aa.status = 1)
-            ");
-            if ($sqlPerms && $sqlPerms->num_rows > 0) {
-                $modIds = [];
-                while ($pRow = $sqlPerms->fetch_assoc()) {
-                    $modIds[] = intval($pRow['module_id']);
-                }
-                if (in_array(5, $modIds) || in_array(6, $modIds)) {
-                    $level = 1;
-                } elseif (in_array(4, $modIds)) {
-                    $level = 2;
-                } else {
-                    $level = 3;
-                }
+            if ($role === 'programmer') {
+                $level = 1;
+            } elseif ($role === 'master') {
+                $level = 2;
+            } else {
+                $level = 3;
             }
 
             return [
@@ -71,8 +56,8 @@ class Admin extends AdminAuth {
                 'ADM_PASS'  => $rawUser['password'],
                 'ADM_LEVEL' => $level,
                 'ADM_STS' => 1,
-                'ADMROLE_NAME' => ($level == 1) ? 'Programmer' : (($level == 2) ? 'Master' : 'Admin Staf'),
-                'role' => $rawUser['role'],
+                'ADMROLE_NAME' => ($level == 1) ? 'Programmer' : (($level == 2) ? 'Master Owner' : 'Admin Staf'),
+                'role' => $role,
                 'ADM_COUNTRY' => 7
             ];
 

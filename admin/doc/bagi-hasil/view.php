@@ -35,34 +35,38 @@ $rekapList = $db->query("
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover">
+                    <table class="table table-bordered table-striped table-hover align-middle">
                         <thead>
                             <tr>
-                                <th>No</th>
+                                <th class="text-center">No</th>
                                 <th>Periode Rekap</th>
                                 <th>Nama Investor</th>
-                                <th>Akumulasi Omzet (Rp)</th>
-                                <th>Potongan Platform (Rp)</th>
-                                <th>Hak Investor (Rp)</th>
-                                <th>Hak Outlet (Rp)</th>
+                                <th class="text-end">Akumulasi Omzet (Rp)</th>
+                                <th class="text-end">Potongan Platform (Rp)</th>
+                                <th class="text-end">Hak Investor (Rp)</th>
+                                <th class="text-end">Hak Outlet (Rp)</th>
+                                <th class="text-center">Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if ($rekapList && $rekapList->num_rows > 0) : ?>
                                 <?php $no = 1; while ($row = $rekapList->fetch_assoc()) : ?>
                                     <tr>
-                                        <td><?= $no++ ?></td>
+                                        <td class="text-center"><?= $no++ ?></td>
                                         <td><span class="badge bg-primary"><?= htmlspecialchars($row['periode_rekap']) ?></span></td>
                                         <td><strong><?= htmlspecialchars($row['nama_investor']) ?></strong></td>
                                         <td class="text-end fw-bold">Rp <?= number_format($row['akumulasi_omzet'], 0, ',', '.') ?></td>
                                         <td class="text-end text-danger">Rp <?= number_format($row['akumulasi_potongan'], 0, ',', '.') ?></td>
                                         <td class="text-end fw-bold text-success">Rp <?= number_format($row['hak_investor'], 0, ',', '.') ?></td>
                                         <td class="text-end fw-bold text-info">Rp <?= number_format($row['hak_outlet'], 0, ',', '.') ?></td>
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-primary btn-sm" onclick="alert('Periode: <?= htmlspecialchars($row['periode_rekap']) ?>\nInvestor: <?= htmlspecialchars($row['nama_investor']) ?>\nHak Investor: Rp <?= number_format($row['hak_investor'], 0, ',', '.') ?>\nHak Outlet: Rp <?= number_format($row['hak_outlet'], 0, ',', '.') ?>')"><i class="fas fa-print me-1"></i> Cetak Rekap</button>
+                                        </td>
                                     </tr>
                                 <?php endwhile; ?>
                             <?php else : ?>
                                 <tr>
-                                    <td colspan="7" class="text-center text-muted">Belum ada rekapitulasi bagi hasil.</td>
+                                    <td colspan="8" class="text-center text-muted py-4">Belum ada rekapitulasi bagi hasil.</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>

@@ -57,6 +57,14 @@ if($check_password !== TRUE) {
 $add_email = !empty($data['add-email']) ? $data['add-email'] : null;
 $add_phone = !empty($data['add-phone']) ? $data['add-phone'] : null;
 
+$add_level = intval($data['add-level'] ?? 3);
+// If creator is Master Owner, enforce level 3 (admin_staf)
+if (($user['ADM_LEVEL'] ?? 1) == 2) {
+    $add_level = 3;
+}
+
+$roleEnum = ($add_level == 1) ? 'programmer' : (($add_level == 2) ? 'master' : 'admin_staf');
+
 // Insert into users table
 $insert = Database::insert("users", [
     'nama_lengkap' => $add_fullname,
@@ -64,7 +72,7 @@ $insert = Database::insert("users", [
     'email'        => $add_email,
     'no_hp'        => $add_phone,
     'password'     => password_hash($add_password, PASSWORD_BCRYPT),
-    'role'         => 'master'
+    'role'         => $roleEnum
 ]);
 
 if(!$insert) {
@@ -76,7 +84,6 @@ if(!$insert) {
 }
 
 $newAdminId = $db->insert_id;
-$add_level = intval($data['add-level'] ?? 2);
 
 // Auto-assign permissions based on level
 $permSql = "SELECT id, module_id FROM admin_permissions";
