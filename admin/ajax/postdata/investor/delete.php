@@ -2,6 +2,7 @@
 use App\Models\Helper;
 use Config\Core\Database;
 
+$data = Helper::getSafeInput($_POST);
 $idInvestor = intval($data['id_investor'] ?? ($data['id'] ?? 0));
 
 if ($idInvestor <= 0) {
@@ -11,6 +12,7 @@ if ($idInvestor <= 0) {
         'message'   => "ID Investor tidak valid",
         'data'      => []
     ]);
+    exit;
 }
 
 $resInv = $db->query("SELECT id_users FROM investor WHERE id_investor = {$idInvestor} LIMIT 1");
@@ -21,6 +23,7 @@ if (!$resInv || $resInv->num_rows == 0) {
         'message'   => "Data investor tidak ditemukan",
         'data'      => []
     ]);
+    exit;
 }
 
 $userId = intval($resInv->fetch_assoc()['id_users']);
