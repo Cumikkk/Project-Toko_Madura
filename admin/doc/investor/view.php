@@ -44,7 +44,7 @@ $investors = $db->query("
 
 <div class="row row-sm">
     <div class="col-lg-12">
-        <div class="card custom-card">
+        <div class="card custom-card overflow-hidden">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
                     <h6 class="main-content-label mb-1">List Investor Toko Madura</h6>
@@ -56,18 +56,18 @@ $investors = $db->query("
             </div>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered table-striped table-hover align-middle" id="investor-table">
+                    <table class="table table-bordered table-striped table-hover key-buttons text-nowrap w-100 align-middle" id="investor-table">
                         <thead>
-                            <tr>
-                                <th class="text-center" style="width: 5%;">No</th>
+                            <tr class="text-center">
+                                <th style="width: 5%;">No</th>
                                 <th>Nama Lengkap</th>
                                 <th>Username</th>
                                 <th>No HP</th>
                                 <th>Email</th>
                                 <th>Alamat Domisili</th>
-                                <th class="text-center">Bagi Hasil (%)</th>
+                                <th>Bagi Hasil (%)</th>
                                 <th>Master Owner</th>
-                                <th class="text-center" style="width: 10%;">#</th>
+                                <th width="15%">#</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -85,10 +85,10 @@ $investors = $db->query("
                                         <td class="text-center">
                                             <div class="action d-flex justify-content-center gap-2">
                                                 <?php if($adminPermissionCore->isHavePermission($moduleId, "update")) : ?>
-                                                    <a href="<?= SystemInfo::app('ADMIN_URL') ?>/investor/create?id=<?= $row['id_investor'] ?>" class="btn btn-warning btn-sm" title="Edit Investor"><i class="fas fa-edit"></i></a>
+                                                    <a href="<?= SystemInfo::app('ADMIN_URL') ?>/investor/create?id=<?= $row['id_investor'] ?>" class="btn btn-success btn-sm text-white btn-edit" title="Edit Investor"><i class="fas fa-edit"></i></a>
                                                 <?php endif; ?>
                                                 <?php if($adminPermissionCore->isHavePermission($moduleId, "delete")) : ?>
-                                                    <button type="button" class="btn btn-danger btn-sm btn-delete" title="Hapus Investor" onclick="deleteInvestor(<?= $row['id_investor'] ?>, '<?= htmlspecialchars($row['nama_lengkap']) ?>')"><i class="fas fa-trash"></i></button>
+                                                    <button type="button" class="btn btn-danger btn-sm text-white btn-delete" title="Hapus Investor" onclick="deleteInvestor(<?= $row['id_investor'] ?>, '<?= htmlspecialchars($row['nama_lengkap']) ?>')"><i class="fas fa-trash"></i></button>
                                                 <?php endif; ?>
                                             </div>
                                         </td>
@@ -111,7 +111,13 @@ $investors = $db->query("
 $(document).ready(function() {
     if ($.fn.DataTable && !$.fn.DataTable.isDataTable('#investor-table')) {
         $('#investor-table').DataTable({
-            responsive: true,
+            processing: true,
+            deferRender: true,
+            scrollX: true,
+            lengthMenu: [
+                [10, 50, 100, -1],
+                [10, 50, 100, "All"]
+            ],
             language: {
                 searchPlaceholder: 'Cari investor...',
                 sSearch: '',
