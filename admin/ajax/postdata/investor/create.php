@@ -44,7 +44,7 @@ if (!$isEdit && empty($password)) {
     ]);
 }
 
-if (!preg_match('/^[a-zA-Z0-9]+$/', $username)) {
+if (!preg_match('/^[a-zA-Z0-9_]+$/', $username)) {
     JsonResponse([
         'code'      => 200,
         'success'   => false,
@@ -109,39 +109,37 @@ if ($isEdit) {
         ]);
     }
 
-    $insertUser = Database::insert("users", [
-        'nama_lengkap' => $nama_lengkap,
-        'username'     => $username,
-        'email'        => $email,
-        'no_hp'        => $no_hp,
-        'password'     => password_hash($password, PASSWORD_BCRYPT),
-        'role'         => 'investor'
-    ]);
+    // Insert user dengan raw query agar tidak terkena bug Database::insert pada tipe enum/decimal
+    $hashedPass   = password_hash($password, PASSWORD_BCRYPT);
+    $nameSafe     = $db->real_escape_string($nama_lengkap);
+    $usernameSafe = $db->real_escape_string($username);
+    $emailVal     = $email ? "'" . $db->real_escape_string($email) . "'" : "NULL";
+    $hpVal        = $no_hp ? "'" . $db->real_escape_string($no_hp) . "'" : "NULL";
+    $passSafe     = $db->real_escape_string($hashedPass);
 
-    if (!$insertUser) {
+    $db->query("INSERT INTO users (nama_lengkap, username, email, no_hp, password, role) VALUES ('{$nameSafe}', '{$usernameSafe}', {$emailVal}, {$hpVal}, '{$passSafe}', 'investor')");
+
+    if ($db->affected_rows < 1) {
         JsonResponse([
             'code'      => 200,
             'success'   => false,
-            'message'   => "Gagal membuat akun user investor",
+            'message'   => "Gagal membuat akun user investor: " . $db->error,
             'data'      => []
         ]);
     }
 
     $newUserId = $db->insert_id;
-    $masterId  = $user['ADM_ID'] ?? 1;
+    $masterId  = intval($user['ADM_ID'] ?? 1);
+    $alamatVal = $alamat ? "'" . $db->real_escape_string($alamat) . "'" : "NULL";
 
-    $insertInvestor = Database::insert("investor", [
-        'id_users'               => $newUserId,
-        'id_master'              => $masterId,
-        'alamat_investor'        => $alamat,
-        'persen_bagian_investor' => $persen
-    ]);
+    // Insert investor dengan raw query agar decimal tidak error di Database::insert
+    $db->query("INSERT INTO investor (id_users, id_master, alamat_investor, persen_bagian_investor) VALUES ({$newUserId}, {$masterId}, {$alamatVal}, {$persen})");
 
-    if (!$insertInvestor) {
+    if ($db->affected_rows < 1) {
         JsonResponse([
             'code'      => 200,
             'success'   => false,
-            'message'   => "Gagal menyimpan data profil investor",
+            'message'   => "Gagal menyimpan data profil investor: " . $db->error,
             'data'      => []
         ]);
     }
